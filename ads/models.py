@@ -14,17 +14,18 @@ class Ad(db.Model):
     price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     accepted = db.Column(db.Boolean, default=False)
+    images = db.relationship('AdImage', backref='ad', lazy=True)
 
     @validates('description')
     def validate_description(self, key, value):
         if len(value) > MAX_DESCRIPTION_LENGTH:
-            raise ValueError(f"Description cannot exceed {MAX_DESCRIPTION_LENGTH} characters.")
+            raise ValueError(f"{key.capitalize()} cannot exceed {MAX_DESCRIPTION_LENGTH} characters.")
         return value
     
     @validates('price')
     def validate_price(self, key, value):
         if value < MIN_PRICE or value > MAX_PRICE:
-            raise ValueError(f"Price must be between {MIN_PRICE} and {MAX_PRICE}.")
+            raise ValueError(f"{key.capitalize()} must be between {MIN_PRICE} and {MAX_PRICE}.")
         return value
 
     def save(self):
@@ -53,3 +54,19 @@ class Ad(db.Model):
     def find_by_id(ad_id):
         """Знайти заявку за ID."""
         return Ad.query.get(ad_id)
+
+
+class AdImage(db.Model):
+    """Модель для збереження зображень заявки."""
+    __tablename__ = 'ad_images'
+
+    id = db.Column(db.Integer, primary_key=True)
+    ad_id = db.Column(db.Integer, db.ForeignKey('ads.id'), nullable=False)
+    image_url = db.Column(db.String(255), nullable=False)
+
+    def save(self):
+        """Зберегти запис зображення в базу даних."""
+        db.session.add(self)
+        db.session.commit()
+
+    

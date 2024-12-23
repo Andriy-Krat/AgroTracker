@@ -1,6 +1,10 @@
-from flask import request, jsonify
+from flask import request, jsonify, current_app
+from werkzeug.utils import secure_filename
+import os
 from . import ads_bp
-from .models import Ad  # Імпортуємо модель Ad
+from .models import Ad, AdImage  # Імпортуємо модель Ad
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 # Маршрут для додавання заявки
 @ads_bp.route('/add', methods=['POST'])
@@ -52,3 +56,30 @@ def accept_ad(ad_id):
         return jsonify({"message": f"Ad with ID {ad_id} accepted"})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Маршрут для завантаження зображень
+@ads_bp.route('/add', methods=['POST'])
+def add_ad():
+    """Додати заявку з можливістю завантаження зображень."""
+    data = request.form.to_dict()  # Дані заявки
+    files = request.files.getlist('images')  # Отримання файлів
+
+    if len(files) > 7:
+        return jsonify({"error": "Максимальна кількість зображень - 7."}), 400
+
+    ad = Ad(**data)
+    ad.save()
+
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            image_url = f'/uploads/{filename}'
+            ad_image = AdImage(ad_id=ad.id, image_url=image_url)
+            ad_image.save()
+
+    return jsonify({"message": "Заявка успішно додана з зображеннями."}), 201
