@@ -1,9 +1,9 @@
 from flask import jsonify, current_app
-from . import ads_bp
-from .models import Ad, AdImage
+from ads import ads_bp
+from ads.models import Ad, AdImage
 import os
 
-@ads_bp.route('/accept/<int:ad_id>', methods=['POST'])
+@ads_bp.route('/delete/<int:ad_id>', methods=['POST'])
 def delete_ad(ad_id):
     # Знайти заявку
     ad = Ad.find_by_id(ad_id)

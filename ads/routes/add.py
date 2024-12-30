@@ -5,12 +5,6 @@ from ads import ads_bp  # Імпортуємо існуючий блупрінт
 from ads.models import Ad, AdImage
 from ads.utils import allowed_file
 
-@ads_bp.route('/test', methods=['GET'])
-def test_route():
-    print("Маршрут '/ads/test' активовано")
-    return jsonify({"message": "Test route is working!"})
-
-"""
 @ads_bp.route('/add', methods=['POST'])
 def add_ad_with_images():
     data = request.form.to_dict()
@@ -19,6 +13,8 @@ def add_ad_with_images():
         return jsonify({"error": "Максимальна кількість зображень - 7."}), 400
 
     try:
+        if 'price' in data:
+            data['price'] = float(data['price'])
         ad = Ad(**data)
         ad.save()
         uploaded_images = []
@@ -44,4 +40,3 @@ def add_ad_with_images():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-"""

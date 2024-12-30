@@ -90,5 +90,22 @@ class AdImage(db.Model):
         """Зберегти запис зображення в базу даних."""
         db.session.add(self)
         db.session.commit()
+   
+    def delete(self):
+        """Видалити фотки."""
+        db.session.delete(self)
+        db.session.commit()
+
+    def update(self, data):
+        """Оновити зображення."""
+        for key, value in data.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
+        db.session.commit()
+    
+    @staticmethod
+    def find_by_id(id):
+        """Знайти заявку за ID."""
+        return AdImage.query.get(id)
 
     

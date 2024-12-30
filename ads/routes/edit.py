@@ -1,9 +1,9 @@
 from flask import request, jsonify, current_app
 import os
 from werkzeug.utils import secure_filename
-from . import ads_bp
-from .models import Ad, AdImage
-from .utils import allowed_file
+from ads import ads_bp
+from ads.models import Ad, AdImage
+from ads.utils import allowed_file
 
 @ads_bp.route('/edit/<int:ad_id>', methods=['PUT'])
 def edit_ad(ad_id):
