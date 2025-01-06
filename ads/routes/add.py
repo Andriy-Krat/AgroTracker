@@ -3,7 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 from ads import ads_bp  # Імпортуємо існуючий блупрінт
 from ads.models import Ad, AdImage
-from ads.utils import allowed_file
+from ads.utils import allowed_file, format_ad_response
+from ads.agrotracker_mailgun import send_notification_email
 
 @ads_bp.route('/add', methods=['POST'])
 def add_ad_with_images():
@@ -27,15 +28,23 @@ def add_ad_with_images():
                 ad_image = AdImage(ad_id=ad.id, image_url=image_url)
                 ad_image.save()
                 uploaded_images.append(image_url)
+        
+        if 'email' in data:  
+            send_notification_email(
+                to_email=data['email'],
+                subject="Ваша заявка успішно створена!",
+                message=f"""
+                <p>Шановний користувачу,</p>
+                <p>Ваша заявка <b>{ad.title}</b> була успішно створена!</p>
+                <p>Опис: {ad.description}</p>
+                <p>Локація: {ad.location}</p>
+                <p>Ціна: {ad.price} UAH</p>
+                <p>Дякуємо за використання нашого сервісу AgroTracker!</p>
+                <p>Очікуйте повідомлення якщо хтось обере вашу заявку</p>
+                """
+            )
 
-        response_data = {
-            "id": ad.id,
-            "title": ad.title,
-            "description": ad.description,
-            "location": ad.location,
-            "price": ad.price,
-            "images": uploaded_images
-        }
+        response_data = format_ad_response(ad, images=uploaded_images)
         return jsonify({"message": "Заявка успішно створена.", "data": response_data}), 201
 
     except Exception as e:

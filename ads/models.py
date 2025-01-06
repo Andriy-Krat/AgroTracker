@@ -12,6 +12,7 @@ class Ad(db.Model):
     """Модель заявки"""
     __tablename__ = 'ads'
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(MAX_TITLE_LENGTH), nullable=False)
     description = db.Column(db.String(MAX_DESCRIPTION_LENGTH), nullable=False)
     price = db.Column(db.Float, nullable=False)
