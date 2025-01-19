@@ -18,6 +18,8 @@ class Ad(db.Model):
     location = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=False)
     accepted = db.Column(db.Boolean, default=False)
     images = db.relationship('AdImage', backref='ad', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Зв'язок з користувачем
+    user = db.relationship('User', backref='ads', lazy=True)  # Відворотній зв'язок
 
     @validates('description')
     def validate_description(self, key, value):
