@@ -4,7 +4,7 @@ import os
 from ads import ads_bp  # Імпортуємо існуючий блупрінт
 from ads.models import Ad, AdImage
 from ads.utils import allowed_file, format_ad_response
-from ads.agrotracker_mailgun import send_notification_email
+from ads.agrotracker_sendgrind import send_notification_email
 
 @ads_bp.route('/add', methods=['POST'])
 def add_ad_with_images():
@@ -34,13 +34,13 @@ def add_ad_with_images():
                 to_email=data['email'],
                 subject="Ваша заявка успішно створена!",
                 message=f"""
-                <p>Шановний користувачу,</p>
-                <p>Ваша заявка <b>{ad.title}</b> була успішно створена!</p>
-                <p>Опис: {ad.description}</p>
-                <p>Локація: {ad.location}</p>
-                <p>Ціна: {ad.price} UAH</p>
-                <p>Дякуємо за використання нашого сервісу AgroTracker!</p>
-                <p>Очікуйте повідомлення якщо хтось обере вашу заявку</p>
+                Шановний користувачу,
+                Ваша заявка <b>{ad.title} була успішно створена!
+                Опис: {ad.description}
+                Локація: {ad.location}
+                Ціна: {ad.price} UAH
+                Дякуємо за використання нашого сервісу AgroTracker!
+                Очікуйте повідомлення якщо хтось обере вашу заявку
                 """
             )
 
