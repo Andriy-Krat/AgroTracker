@@ -4,28 +4,36 @@ from sqlalchemy.orm import validates
 MAX_PRICE = 1000000.0  # максимальна ціна
 MIN_PRICE = 0.0  # мінімальна ціна
 MAX_DESCRIPTION_LENGTH = 1000  # максимальна кількість символів для опису
-MAX_TITLE_LENGTH = 100 
+MAX_TITLE_LENGTH = 100
 MAX_LOCATION_LENGTH = 100
 MAX_URL_LENGTH = 255
 
+
 class Ad(db.Model):
-    """Модель заявки"""
+    """Модель оголошення."""
     __tablename__ = 'ads'
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(MAX_TITLE_LENGTH), nullable=False)
     description = db.Column(db.String(MAX_DESCRIPTION_LENGTH), nullable=False)
     price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=False)
+    region = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Регіон
+    district = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Район
     accepted = db.Column(db.Boolean, default=False)
     images = db.relationship('AdImage', backref='ad', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Зв'язок з користувачем
+    user = db.relationship('User', backref='ads', lazy=True)  # Відворотній зв'язок
+    
+    def __repr__(self):
+        return f"<Ad {self.title}>"
 
     @validates('description')
     def validate_description(self, key, value):
         if len(value) > MAX_DESCRIPTION_LENGTH:
             raise ValueError(f"{key.capitalize()} cannot exceed {MAX_DESCRIPTION_LENGTH} characters.")
         return value
-    
-    
+
     @validates('title')
     def validate_description(self, key, value):
         if len(value) > MAX_TITLE_LENGTH:
@@ -47,7 +55,7 @@ class Ad(db.Model):
     def save(self):
         """Зберегти заявку."""
         db.session.add(self)
-        db.session.commit()  
+        db.session.commit()
 
     def update(self, data):
         """Оновити заявку."""
@@ -90,7 +98,7 @@ class AdImage(db.Model):
         """Зберегти запис зображення в базу даних."""
         db.session.add(self)
         db.session.commit()
-   
+
     def delete(self):
         """Видалити фотки."""
         db.session.delete(self)
@@ -102,10 +110,9 @@ class AdImage(db.Model):
             if hasattr(self, key):
                 setattr(self, key, value)
         db.session.commit()
-    
+
     @staticmethod
     def find_by_id(id):
         """Знайти заявку за ID."""
         return AdImage.query.get(id)
 
-    
