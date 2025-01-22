@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from config import Config
+from ads.models import *
 
 
 app = Flask(__name__)
@@ -13,7 +14,7 @@ migrate = Migrate(app, db)
 
 jwt = JWTManager(app)
 
-from ads.models import *
+
 from ads import ads_bp
 from User import user_bp
 
