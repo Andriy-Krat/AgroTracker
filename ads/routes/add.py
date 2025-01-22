@@ -35,7 +35,7 @@ def add_ad_with_images():
                 subject="Ваша заявка успішно створена!",
                 message=f"""
                 Шановний користувачу,
-                Ваша заявка <b>{ad.title} була успішно створена!
+                Ваша заявка {ad.title} була успішно створена!
                 Опис: {ad.description}
                 Локація: {ad.location}
                 Ціна: {ad.price} UAH
@@ -49,5 +49,3 @@ def add_ad_with_images():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-
-#efef
