@@ -35,13 +35,13 @@ class Ad(db.Model):
         return value
 
     @validates('title')
-    def validate_description(self, key, value):
+    def validate_title(self, key, value):
         if len(value) > MAX_TITLE_LENGTH:
             raise ValueError(f"{key.capitalize()} cannot exceed {MAX_TITLE_LENGTH} characters.")
         return value
 
     @validates('location')
-    def validate_description(self, key, value):
+    def validate_location(self, key, value):
         if len(value) > MAX_LOCATION_LENGTH:
             raise ValueError(f"{key.capitalize()} cannot exceed {MAX_LOCATION_LENGTH} characters.")
         return value

@@ -1,9 +1,11 @@
-from flask import jsonify, request
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
-from .. import user_bp
-from ..models import User
+#from User import user_bp
+from User.models import User
 
-@user_bp.route('/profile/<int:user_id>', methods=['GET'])
+profile_bp = Blueprint('profile', __name__)
+
+@profile_bp.route('/profile/<int:user_id>', methods=['GET'])
 @jwt_required()  
 def get_profile(user_id):
 
