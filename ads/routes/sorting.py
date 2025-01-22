@@ -1,7 +1,10 @@
 from flask import request, jsonify
 from ads import ads_bp
 from ads.models import Ad
+<<<<<<< HEAD
 from ads.utils import format_ad_response
+=======
+>>>>>>> master
 
 @ads_bp.route('/sort', methods=['GET'])
 def sort_ads():
@@ -28,6 +31,7 @@ def sort_ads():
         if not ads:
             return jsonify({"message": "Оголошення не знайдені."}), 404
 
+<<<<<<< HEAD
         # Формування результатів
         results = []
         for ad in ads:
@@ -39,5 +43,21 @@ def sort_ads():
 
         # Повернення результатів
         return jsonify({"message": "Результати пошуку:", "data": results}), 200
+=======
+        # Створюємо список результатів
+        results = [{
+            "id": ad.id,
+            "title": ad.title,
+            "description": ad.description,
+            "location": ad.location,
+            "region": ad.region,
+            "district": ad.district,
+            "price": ad.price
+        } for ad in ads]
+
+        # Повертаємо результат
+        return jsonify({"message": "Результати сортування:", "data": results}), 200
+
+>>>>>>> master
     except Exception as e:
         return jsonify({"error": str(e)}), 400

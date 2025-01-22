@@ -19,6 +19,8 @@ class Ad(db.Model):
     description = db.Column(db.String(MAX_DESCRIPTION_LENGTH), nullable=False)
     price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=False)
+    region = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Регіон
+    district = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Район
     accepted = db.Column(db.Boolean, default=False)
     images = db.relationship('AdImage', backref='ad', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Зв'язок з користувачем

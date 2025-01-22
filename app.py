@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager
 from config import Config
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -19,8 +20,11 @@ from User import user_bp
 
 app.register_blueprint(ads_bp)
 app.register_blueprint(user_bp)
+<<<<<<< HEAD
 
 CORS(app, resources={r"/ads/*": {"origins": "http://localhost:4200"}})
+=======
+>>>>>>> master
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
