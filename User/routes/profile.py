@@ -19,7 +19,7 @@ def get_profile(user_id):
 
     if not user_role:
         return jsonify({"error": "Role is missing in the token"}), 403
-
+ 
 
     if user_role == "admin":
 
