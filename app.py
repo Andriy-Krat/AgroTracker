@@ -14,7 +14,8 @@ app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
+app.config['JWT_SECRET_KEY'] = 'VerySecretKeyTESTKey1231!Qewq342rwrwrfw'
+app.config['JWT_ALGORITHM'] = 'HS256'
 jwt = JWTManager(app)
 
 from ads.models import *
