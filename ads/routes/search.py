@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from ads import ads_bp
 from ads.models import Ad
+from ads.utils import format_ad_response
 
 @ads_bp.route('/search', methods=['GET'])
 def search_ads():
@@ -27,15 +28,11 @@ def search_ads():
         # Формування результатів
         results = []
         for ad in ads:
-            results.append({
-                "id": ad.id,
-                "title": ad.title,
-                "description": ad.description,
-                "location": ad.location,
-                "region": ad.region,
-                "district": ad.district,
-                "price": ad.price
-            })
+            # Отримання URL зображень для кожного оголошення
+            images = [image.image_url for image in ad.images]
+            # Форматування оголошення
+            ad_response = format_ad_response(ad, images)
+            results.append(ad_response)
 
         # Повернення результатів
         return jsonify({"message": "Результати пошуку:", "data": results}), 200

@@ -14,12 +14,11 @@ class Ad(db.Model):
     __tablename__ = 'ads'
 
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(MAX_TITLE_LENGTH), nullable=False)
     description = db.Column(db.String(MAX_DESCRIPTION_LENGTH), nullable=False)
     price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=False)
-    region = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Регіон
-    district = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=True)  # Район
     accepted = db.Column(db.Boolean, default=False)
     images = db.relationship('AdImage', backref='ad', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Зв'язок з користувачем
@@ -35,13 +34,13 @@ class Ad(db.Model):
         return value
 
     @validates('title')
-    def validate_description(self, key, value):
+    def validate_title(self, key, value):
         if len(value) > MAX_TITLE_LENGTH:
             raise ValueError(f"{key.capitalize()} cannot exceed {MAX_TITLE_LENGTH} characters.")
         return value
 
     @validates('location')
-    def validate_description(self, key, value):
+    def validate_location(self, key, value):
         if len(value) > MAX_LOCATION_LENGTH:
             raise ValueError(f"{key.capitalize()} cannot exceed {MAX_LOCATION_LENGTH} characters.")
         return value

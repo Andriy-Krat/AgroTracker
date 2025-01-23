@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from config import Config
+from flask_cors import CORS
 
 
 app = Flask(__name__)
@@ -19,6 +20,8 @@ from User import user_bp
 
 app.register_blueprint(ads_bp)
 app.register_blueprint(user_bp)
+
+CORS(app, resources={r"/ads/*": {"origins": "http://localhost:4200"}})
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
