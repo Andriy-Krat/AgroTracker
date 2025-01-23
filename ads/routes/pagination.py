@@ -35,3 +35,4 @@ def get_all_ads():
 
     except Exception as e:
         return jsonify({"error": f"Виникла помилка: {str(e)}"}), 500
+

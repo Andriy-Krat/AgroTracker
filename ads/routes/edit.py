@@ -3,7 +3,7 @@ import os
 from werkzeug.utils import secure_filename
 from ads import ads_bp
 from ads.models import Ad, AdImage
-from ads.utils import allowed_file
+from ads.utils import allowed_file, format_ad_response
 
 @ads_bp.route('/edit/<int:ad_id>', methods=['PUT'])
 def edit_ad(ad_id):
@@ -57,16 +57,7 @@ def edit_ad(ad_id):
                     ad_image = AdImage(ad_id=ad.id, image_url=image_url)
                     ad_image.save()
 
-        # Формуємо відповідь із оновленими даними
-        response_data = {
-            "id": ad.id,
-            "title": ad.title,
-            "description": ad.description,
-            "location": ad.location,
-            "price": ad.price,
-            "images": [image.image_url for image in ad.images]  # Оновлений список зображень
-        }
-
+        response_data = format_ad_response(ad, images=[image.image_url for image in ad.images])
         return jsonify({"message": "Заявка успішно оновлена.", "data": response_data}), 200
 
     except Exception as e:
