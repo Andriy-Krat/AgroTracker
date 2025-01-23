@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
-#from User import user_bp
+from ads.utils import format_ad_response
 from User.models import User
 
 profile_bp = Blueprint('profile', __name__)
@@ -40,21 +40,20 @@ def get_profile(user_id):
 
 
     ads_data = [
-        {
-            "title": ad.title,
-            "location": ad.location,
-            "price": ad.price,
-            "description": ad.description
-        }
+        format_ad_response(ad, [image.image_url for image in ad.images])
         for ad in user.ads
     ]
 
     # Повернення даних про користувача (спочатку користувач, потім оголошення)
     user_data = {
-        #"username": user.username,
-        #"email": user.email,
-        #"phone": user.phone,
         "ads": ads_data  # Інформація про оголошення після користувача
     }
 
     return jsonify(user_data)
+# Повернення даних про користувача (спочатку користувач, потім оголошення)
+   # user_data = {
+        #"username": user.username,
+        #"email": user.email,
+        #"phone": user.phone,
+       # "ads": ads_data  # Інформація про оголошення після користувача
+   # }
