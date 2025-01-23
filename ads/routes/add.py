@@ -12,6 +12,7 @@ from ads.agrotracker_sendgrind import send_notification_email
 @jwt_required() 
 def add_ad_with_images():
     data = request.form.to_dict()
+    print("DATA:", data)
     files = request.files.getlist('images')
 
     if len(files) > 7:
@@ -39,7 +40,7 @@ def add_ad_with_images():
             data['price'] = float(data['price'])
 
         # Збереження оголошення
-        ad = Ad(**data)
+        ad = Ad(**data, user_id=user_id)  # user_id передається в модель
         ad.save()
 
         # Завантаження зображень

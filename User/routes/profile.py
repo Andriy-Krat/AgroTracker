@@ -1,59 +1,45 @@
-from flask import Blueprint, jsonify
-from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
+import requests
 from ads.utils import format_ad_response
-from User.models import User
+from ads.models import Ad
+#from User.models import User  # Модель User із зовнішнього сервісу
 
 profile_bp = Blueprint('profile', __name__)
 
-@profile_bp.route('/profile/<int:user_id>', methods=['GET'])
-@jwt_required()  
-def get_profile(user_id):
+@profile_bp.route('/profile', methods=['GET'])
+@jwt_required()
+def get_profile():
+    try:
+        # Отримуємо `user_id` із JWT
+        current_user_id = get_jwt_identity()
+        if not current_user_id:
+            return jsonify({"error": "Не вдалося отримати userId з токену."}), 400
 
-    current_user_id = get_jwt_identity()
+        # Отримання email через API-запит
+        #user_email_url = f"http://localhost:8077/api/user/{current_user_id}/email"
+        #response = requests.get(user_email_url)
+        #if response.status_code != 200:
+         #   return jsonify({"error": "Не вдалося отримати email користувача."}), 400
 
+        #user_email = response.json().get("email")
+        #if not user_email:
+         #   return jsonify({"error": "Email користувача відсутній у відповіді API."}), 400
 
-    jwt_claims = get_jwt()
+        # Отримання оголошень для цього користувача
+        ads = Ad.query.filter_by(user_id=current_user_id).all()
+        ads_data = [
+            format_ad_response(ad, [image.image_url for image in ad.images])
+            for ad in ads
+        ]
 
+        # Підготовка відповіді
+        user_data = {
+           # "user_id": current_user_id,
+            #"email": user_email,
+            "ads": ads_data
+        }
+        return jsonify(user_data), 200
 
-    user_role = jwt_claims.get("role") 
-
-    if not user_role:
-        return jsonify({"error": "Role is missing in the token"}), 403
- 
-
-    if user_role == "admin":
-
-        pass
-
-    elif user_role == "user" and int(user_id) == int(current_user_id):
-
-        pass
-
-    else:
-        return jsonify({"error": "Access denied"}), 403
-
-
-    user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-
-    ads_data = [
-        format_ad_response(ad, [image.image_url for image in ad.images])
-        for ad in user.ads
-    ]
-
-    # Повернення даних про користувача (спочатку користувач, потім оголошення)
-    user_data = {
-        "ads": ads_data  # Інформація про оголошення після користувача
-    }
-
-    return jsonify(user_data)
-# Повернення даних про користувача (спочатку користувач, потім оголошення)
-   # user_data = {
-        #"username": user.username,
-        #"email": user.email,
-        #"phone": user.phone,
-       # "ads": ads_data  # Інформація про оголошення після користувача
-   # }
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

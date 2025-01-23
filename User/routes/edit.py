@@ -1,7 +1,7 @@
-from flask import Blueprint, jsonify, request
+'''from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from email_validator import validate_email, EmailNotValidError
-from User.models import User
+#from User.models import User
 from app import db
 import re
 
@@ -80,3 +80,4 @@ def edit_profile(user_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Failed to update profile", "details": str(e)}), 500
+'''

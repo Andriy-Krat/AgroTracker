@@ -14,15 +14,15 @@ class Ad(db.Model):
     __tablename__ = 'ads'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), nullable=False)
+    #email = db.Column(db.String(255), nullable=False)
     title = db.Column(db.String(MAX_TITLE_LENGTH), nullable=False)
     description = db.Column(db.String(MAX_DESCRIPTION_LENGTH), nullable=False)
     price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(MAX_LOCATION_LENGTH), nullable=False)
     accepted = db.Column(db.Boolean, default=False)
     images = db.relationship('AdImage', backref='ad', lazy=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Зв'язок з користувачем
-    user = db.relationship('User', backref='ads', lazy=True)  # Відворотній зв'язок
+    user_id = db.Column(db.String(100), nullable=False)  # Зв'язок з користувачем
+    #user = db.relationship('User', backref='ads', lazy=True)  # Відворотній зв'язок
     
     def __repr__(self):
         return f"<Ad {self.title}>"
