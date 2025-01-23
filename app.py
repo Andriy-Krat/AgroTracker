@@ -20,11 +20,8 @@ from User import user_bp
 
 app.register_blueprint(ads_bp)
 app.register_blueprint(user_bp)
-<<<<<<< HEAD
 
 CORS(app, resources={r"/ads/*": {"origins": "http://localhost:4200"}})
-=======
->>>>>>> master
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
