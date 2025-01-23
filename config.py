@@ -9,4 +9,5 @@ class Config:
     JWT_SECRET = os.getenv("JWT_SECRET", "VerySecretKey")
     JWT_TOKEN_LOCATION = ["headers"] 
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    
 
