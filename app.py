@@ -6,7 +6,10 @@ from config import Config
 from flask_cors import CORS
 
 
+
+
 app = Flask(__name__)
+
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
@@ -15,6 +18,7 @@ migrate = Migrate(app, db)
 jwt = JWTManager(app)
 
 from ads.models import *
+
 from ads import ads_bp
 from User import user_bp
 
